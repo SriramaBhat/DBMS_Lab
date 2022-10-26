@@ -36,8 +36,6 @@ struct Student {
 
 typedef struct Student student;
 
-student stu;
-
 void file_check(FILE *fp) {
     if(fp == NULL) {
         printf("Error opening the file\n");
