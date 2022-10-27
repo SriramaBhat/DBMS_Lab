@@ -192,7 +192,6 @@ void search_sid() {
     char stID[15];
     FILE *fp;
     student stu;
-    int flag = 0;
     system("cls"); // system("clear") for linux based terminals
     printf("\n------------------------------ Search Record ---------------------------------------\n\n");
     printf("Enter the SID of the student to be found: \n");
@@ -208,11 +207,6 @@ void search_sid() {
             printf("%s\t%s\t%s\t%d\t\t%s\n", stu.SID, stu.NAME, stu.BRANCH, stu.SEMESTER, stu.ADDRESS);
             flag = 1;
         }
-    }
-
-    if(flag == 0) {
-        printf("Student not found, enter a valid SID\n");
-        getch();
     }
 
     fclose(fp);
