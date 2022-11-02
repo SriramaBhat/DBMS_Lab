@@ -36,6 +36,8 @@ struct Student {
 
 typedef struct Student student;
 
+student stu;
+
 void file_check(FILE *fp) {
     if(fp == NULL) {
         printf("Error opening the file\n");
@@ -49,7 +51,7 @@ void insert() {
 
     student stu;
     FILE *fp;
-    char another_add = 'y';
+    char another_add = 'y', ch;
     system("cls"); // system("clear") on Linux based terminals
 
     fp = fopen("record.txt", "ab+");
@@ -59,37 +61,43 @@ void insert() {
     while(another_add == 'y') {
         printf("\n--------------------Add New Record---------------------------\n");
         printf("Enter the SID or USN: \n");
-        gets(stu.SID);
+        scanf("%s", stu.SID);
+        //gets(stu.SID);
         fflush(stdin);
         printf("Enter Name: \n");
-        gets(stu.NAME);
-        fflush(stdin);
+        scanf("%[^\n]", stu.NAME);
+        //gets(stu.NAME);
+        //fflush(stdin);
         printf("Enter Branch: \n");
-        gets(stu.BRANCH);
-        fflush(stdin);
+        scanf("%s", stu.BRANCH);
+        //gets(stu.BRANCH);
+        //fflush(stdin);
         printf("Enter Semester: \n");
         scanf("%d", &stu.SEMESTER);
         fflush(stdin);
         printf("Enter address: \n");
-        gets(stu.ADDRESS);
+        scanf("%[^\n]", stu.ADDRESS);
+        //gets(stu.ADDRESS);
 
         fwrite(&stu, sizeof(stu), 1, fp);
         printf("To add another record press 'y', else press 'n': ");
-        fflush(stdin);
-        another_add = getch();
+        //fflush(stdin);
+        another_add = scanf("%c", &another_add);//getch();
         system("cls"); // system("clear") for Linux based terminals
-        fflush(stdin);
+        //fflush(stdin);
     }
 
     fclose(fp);
     printf("Press any key to continue");
-    getch();
+    scanf("%c", &ch);
+    //getch();
     menu();
 }
 
 void list_all() {
     FILE *fp;
     student stu;
+    char ch;
     system("cls"); // system("clear") for Linux based terminals
     printf("\n------------------- Record List -----------------------\n");
     printf("SID\t\tName\t\tBranch\tSemester\t\tAddress\n");
@@ -102,21 +110,23 @@ void list_all() {
     }
     fclose(fp);
     printf("Press any key to continue");
-    getch();
+    scanf("%c", &ch);
+    //getch();
     menu();
 }
 
 // Modifies the student data on basis of SID
 void modify() {
-    char stID[15];
+    char stID[15], ch;
     FILE *fp;
     student stu;
     int flag = 0;
     system("cls"); // system("clear") for linux based terminals
     printf("\n------------------------------ Modify Record ---------------------------------------\n\n");
     printf("Enter the SID of the student to be modified: \n");
-    fflush(stdin);
-    gets(stID);
+    //fflush(stdin);
+    //gets(stID);
+    scanf("%s", stID);
     fp = fopen("record.txt", "rb+");
     file_check(fp);
     fflush(stdin);
@@ -125,19 +135,23 @@ void modify() {
         if(strcmp(stID, stu.SID) == 0) {
             flag = 1;
             printf("Enter the SID or USN: \n");
-            gets(stu.SID);
+            scanf("%s", stu.SID);
+            //gets(stu.SID); 
             fflush(stdin);
             printf("Enter Name: \n");
-            gets(stu.NAME);
-            fflush(stdin);
+            scanf("%[^\n]", stu.NAME);
+            //gets(stu.NAME);
+            //fflush(stdin);
             printf("Enter Branch: \n");
-            gets(stu.BRANCH);
-            fflush(stdin);
+            scanf("%s", stu.BRANCH);
+            //gets(stu.BRANCH);
+            //fflush(stdin);
             printf("Enter Semester: \n");
             scanf("%d", &stu.SEMESTER);
             fflush(stdin);
             printf("Enter address: \n");
-            gets(stu.ADDRESS);
+            scanf("%[^\n]", stu.ADDRESS);
+            //gets(stu.ADDRESS);
             
             fseek(fp, -sizeof(stu), SEEK_CUR);
             fwrite(&stu, sizeof(stu), 1, fp);
@@ -147,26 +161,29 @@ void modify() {
 
     if(flag == 0) {
         printf("Student not found, enter a valid SID\n");
-        getch();
+        scanf("%c", &ch);
+        //getch();
         modify();
     }
 
     fclose(fp);
     printf("Press any key to continue:");
-    getch();
+    scanf("%c", &ch);
+//    getch();
     menu();
 }
 
 // Deletes record on the basis of SID, if SID not present, the record remains unchanged
 void delete() {
-    char stID[15];
+    char stID[15], ch;
     FILE *fp, *ft;
     student stu;
     system("cls"); // system("clear") for Linux based terminals
     printf("\n------------------------ Delete Record --------------------------\n\n");
     printf("Enter the SID of the student to be deleted:\n");
-    fflush(stdin);
-    gets(stID);
+    scanf("%s", stID);
+    //fflush(stdin);
+    //gets(stID);
     fp = fopen("record.txt", "rb+");
     file_check(fp);
     ft = fopen("temp.txt", "wb+");
@@ -182,21 +199,24 @@ void delete() {
     remove("record.txt");
     rename("temp.txt", "record.txt");
     printf("Press any key to continue:");
-    getch();
+    scanf("%c", &ch);
+    //getch();
     menu();
 }
 
 // Searchs a student record based on SID
 // Not asked in the description
 void search_sid() {
-    char stID[15];
+    char stID[15], ch;
     FILE *fp;
     student stu;
+    int flag = 0;
     system("cls"); // system("clear") for linux based terminals
     printf("\n------------------------------ Search Record ---------------------------------------\n\n");
     printf("Enter the SID of the student to be found: \n");
-    fflush(stdin);
-    gets(stID);
+    scanf("%s", stID);
+    //fflush(stdin);
+    //gets(stID);
     fp = fopen("record.txt", "rb+");
     file_check(fp);
     fflush(stdin);
@@ -209,23 +229,31 @@ void search_sid() {
         }
     }
 
+    if(flag == 0) {
+        printf("Student not found, enter a valid SID\n");
+        scanf("%c", &ch);
+      //  getch();
+    }
+
     fclose(fp);
     printf("Press any key to continue:");
-    getch();
+    scanf("%c", &ch);
+    //getch();
     menu();
 }
 
 // Lists all the students in a given branch
 void list_branch() {
-    char stBr[5];
+    char stBr[5], ch;
     FILE *fp;
     student stu;
     int flag = 0;
     system("cls"); // system("clear") for linux based terminals
     printf("\n------------------------------ List Branch ---------------------------------------\n\n");
     printf("Enter the Branch of the student to be found: \n");
-    fflush(stdin);
-    gets(stBr);
+    scanf("%s", stBr);
+    //fflush(stdin);
+    //gets(stBr);
     fp = fopen("record.txt", "rb+");
     file_check(fp);
     fflush(stdin);
@@ -239,21 +267,23 @@ void list_branch() {
 
     fclose(fp);
     printf("Press any key to continue:");
-    getch();
+    scanf("%c", &ch);
+    //getch();
     menu();
 }
 
 // Lists all the students of a given address substring
 // Not required as per description
 void list_address() {
-    char stAr[25];
+    char stAr[25], ch;
     FILE *fp;
     student stu;
     system("cls"); // system("clear") for linux based terminals
     printf("\n------------------------------ List by Address ---------------------------------------\n\n");
     printf("Enter the Address of the student to be found: \n");
     fflush(stdin);
-    gets(stAr);
+    scanf("%[^\n]", stAr);
+    //gets(stAr);
     fp = fopen("record.txt", "rb+");
     file_check(fp);
     fflush(stdin);
@@ -267,23 +297,26 @@ void list_address() {
 
     fclose(fp);
     printf("Press any key to continue:");
-    getch();
+    scanf("%c", &ch);
+   // getch();
     menu();
 }
 
 // Lists students of a given branch with given address substring
 void list_address_branch() {
-    char stBr[5], stAr[25];
+    char stBr[5], stAr[25], ch;
     FILE *fp;
     student stu;
     system("cls"); // system("clear") for linux based terminals
     printf("\n------------------------------ List Branch and Address ---------------------------------------\n\n");
     printf("Enter the Branch of the student to be found: \n");
+    scanf("%s", stBr);
     fflush(stdin);
-    gets(stBr);
+//    gets(stBr);
     printf("Enter the Address substring of the student to be found: \n");
-    fflush(stdin);
-    gets(stAr);
+    scanf("%[^\n]", stAr);
+//    fflush(stdin);
+//    gets(stAr);
     fp = fopen("record.txt", "rb+");
     file_check(fp);
     fflush(stdin);
@@ -297,7 +330,8 @@ void list_address_branch() {
 
     fclose(fp);
     printf("Press any key to continue:");
-    getch();
+    scanf("%c", &ch);
+//    getch();
     menu();
 }
 
@@ -311,6 +345,7 @@ void menu() {
     printf("5) List students based on address\n6) List students based on address and branch\n");
     printf("7) Modify a student record\n8) Delete a student record\n9) Exit\n");
     printf("Enter your choice from the above operations: \n");
+    fflush(stdin);
     scanf("%d", &choice);
 
     switch(choice) {
