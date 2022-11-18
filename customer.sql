@@ -3,31 +3,40 @@ USE customer_160;
 CREATE TABLE IF NOT EXISTS customer (
     cust INTEGER NOT NULL,
     cname VARCHAR(50) NOT NULL,
-    city VARCHAR(50) NOT NULL
+    city VARCHAR(50) NOT NULL,
+    PRIMARY KEY(cust)
 );
 
 CREATE TABLE IF NOT EXISTS orders (
     oid INTEGER NOT NULL,
     odate DATE NOT NULL,
     cust INTEGER,
-    order_amt INTEGER
+    order_amt INTEGER,
+    PRIMARY KEY(oid),
+    FOREIGN KEY(cust) REFERENCES customer(cust) 
+    ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS order_item (
     orders INTEGER NOT NULL,
     item INTEGER,
-    qty INTEGER
+    qty INTEGER,
+    FOREIGN KEY(orders) REFERENCES orders(oid)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS item (
     itemid INTEGER NOT NULL,
-    unitprice INTEGER NOT NULL
+    unitprice INTEGER NOT NULL,
+    PRIMARY KEY(itemid)
 );
 
 CREATE TABLE IF NOT EXISTS shipment (
     orders INTEGER NOT NULL,
     warehouse INTEGER,
-    ship_date DATE NOT NULL
+    ship_date DATE NOT NULL,
+    FOREIGN KEY(orders) REFERENCES orders(oid)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS warehouse (
@@ -80,6 +89,9 @@ INSERT INTO shipment VALUES
 ALTER TABLE orders MODIFY cust INTEGER NOT NULL;
 ALTER TABLE order_item MODIFY item INTEGER NOT NULL;
 ALTER TABLE shipment MODIFY warehouse INTEGER NOT NULL;
+ALTER TABLE order_item ADD CONSTRAINT FOREIGN KEY(item) REFERENCES item(itemid);
+ALTER TABLE warehouse ADD CONSTRAINT PRIMARY KEY(warehouseid);
+ALTER TABLE shipment ADD CONSTRAINT FOREIGN KEY(warehouse) REFERENCES warehouse(warehouseid);
 
 UPDATE orders SET order_amt = 600 WHERE orderid = 002;
 UPDATE order_item SET item = 0002 WHERE orders = 002;
