@@ -4,7 +4,8 @@ CREATE TABLE IF NOT EXISTS student (
     regno VARCHAR(20) NOT NULL,
     sname VARCHAR(50) NOT NULL,
     major VARCHAR(50) NOT NULL,
-    bdate DATE
+    bdate DATE,
+    PRIMARY KEY(regno)
 );
 
 CREATE TABLE IF NOT EXISTS course (
@@ -17,20 +18,25 @@ CREATE TABLE IF NOT EXISTS enroll (
     regno VARCHAR(20),
     course INTEGER NOT NULL,
     sem INTEGER,
-    marks INTEGER
+    marks INTEGER,
+    FOREIGN KEY(regno) REFERENCES student(regno)
+    ON DELETE CASCADE 
 );
 
 CREATE TABLE IF NOT EXISTS book_adoption (
     course INTEGER,
     sem INTEGER,
-    bookISBN INTEGER NOT NULL
+    bookISBN INTEGER NOT NULL,
+    FOREIGN KEY(bookISBN) REFERENCES text_book(bookISBN)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS text_book (
     bookISBN INTEGER NOT NULL,
     book_title VARCHAR(50),
     publisher VARCHAR(50) NOT NULL,
-    author VARCHAR(50) NOT NULL
+    author VARCHAR(50) NOT NULL,
+    PRIMARY KEY(bookISBN)
 );
 
 INSERT INTO student VALUES
@@ -71,6 +77,9 @@ INSERT INTO text_book VALUES
 ALTER TABLE enroll MODIFY regno VARCHAR(20) NOT NULL;
 ALTER TABLE text_book MODIFY book_title VARCHAR(50) NOT NULL;
 ALTER TABLE student MODIFY bdate DATE NOT NULL;
+ALTER TABLE course ADD CONSTRAINT PRIMARY KEY(course);
+ALTER TABLE enroll ADD CONSTRAINT FOREIGN KEY(course) REFERNCES course(course);
+ALTER TABLE book_adoption ADD CONSTRAINT FOREIGN KEY(course) REFERNCES course(course);
 
 INSERT INTO text_book VALUES (567385, "Principles of Cryptography", "McGraw Hill", "Silberschatz");
 UPDATE book_adoption SET bookISBN = 567385 WHERE course = 5;
